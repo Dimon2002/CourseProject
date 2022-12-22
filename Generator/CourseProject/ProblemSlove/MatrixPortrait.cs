@@ -55,11 +55,6 @@ internal class MatrixPortrait
 
         for (int i = 0; i < NodesCount - 1; i++)
             ia[i + 2] = ia[i + 1] + 1 + i % 2;
-
-        // ia.Add(1);
-        /*for (int i = 0; i < AdjacencyList.Count; ++i)
-            ia.Add(AdjacencyList[i].Count + ia.Last());
-        ia.Add(AdjacencyList[^1].Count + ia.Last() + 1);*/
     }
 
     private static void PrintAdjacencyList(List<List<int>> AdjacencyList)

@@ -12,7 +12,6 @@ internal class SlaeSolver
     private readonly List<double> _b;
     private readonly List<double> _q;
 
-    private List<List<double>> A = new List<List<double>>();
     public SlaeSolver(GlobalComponents globalComponent)
     {
         _ia = globalComponent.ia;
@@ -33,7 +32,7 @@ internal class SlaeSolver
         CholeskyDecomposition();
         ForwardReverse();
 
-        PrintComponentsCholesky();
+        // PrintComponentsCholesky();
     }
 
     private void CholeskyDecomposition()
@@ -45,6 +44,7 @@ internal class SlaeSolver
         for (int i = 1; i < _nodesCount; i++)                 // пробегаем по строкам матрицы
         {
             int a = i - (_ia[i + 1] - _ia[i]);                  // начало i-й строки в абсолютной нумерации
+
             for (int j = 0; j < _ia[i + 1] - _ia[i]; j++)     // пробегаем по столбцам до диагонали
             {
                 int b = a + j - _ia[a + j + 1] + _ia[a + j];  // начало j-й строки в абсолютной нумерации
