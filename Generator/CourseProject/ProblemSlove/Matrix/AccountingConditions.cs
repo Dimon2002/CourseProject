@@ -19,7 +19,7 @@ internal class AccountingConditions
 
     public void ConsiderAccountingConditions()
     {
-        foreach (var condition in _conditions)
+        foreach (var condition in _conditions.OrderByDescending(item => item.TypeConditions))
         {
             switch (condition.TypeConditions)
             {
@@ -43,8 +43,8 @@ internal class AccountingConditions
     {
         if (SideConditions)
         {
-            _globalComponents.di[_globalComponents._matrixPortrait.NodesCount] = 1e+60;
-            _globalComponents.b[_globalComponents._matrixPortrait.NodesCount] = 1e+60 * value;
+            _globalComponents.di[_globalComponents._matrixPortrait.NodesCount - 1] = 1e+60;
+            _globalComponents.b[_globalComponents._matrixPortrait.NodesCount - 1] = 1e+60 * value;
         }
         else
         {
@@ -60,8 +60,8 @@ internal class AccountingConditions
     public void AccountingSecondConditions(bool SideConditions, double value)
     {
         if (SideConditions)
-            _globalComponents.b[_globalComponents._matrixPortrait.NodesCount] += value * _globalComponents._matrixPortrait.LastNode;
+            _globalComponents.b[^1] += value * _globalComponents._matrixPortrait.LastNode;
         else
-            _globalComponents.b[0] += value * _globalComponents._matrixPortrait.FirstNode;
-    }/// правильно не?????
+            _globalComponents.b[0] -= value * _globalComponents._matrixPortrait.FirstNode;
+    }
 }

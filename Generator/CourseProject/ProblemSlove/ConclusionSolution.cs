@@ -5,26 +5,23 @@ namespace CourseProject.ProblemSlove;
 
 internal static class ConclusionSolution
 {
-    internal static void Print(List<double> q, List<Node> nodes)
+    internal static void Print(List<double> q, List<Node> nodes, int NumberFunction = 1)
     {
-        double qz, sum1 = 0, sum2 = 0;
+        double sum1 = 0, sum2 = 0;
 
         using StreamWriter outWriter = new(Config.Root + Config.Out);
 
-        outWriter.WriteLine("x (узлы)\t\tq = u(x) (численное значение)\t\tq* (точное значение)\t\t||q - q*|| (погрешность)\n");
-
+        outWriter.WriteLine("r (узлы)\t\t\tq = u(r)\t\t\tq*\t\t\t\t\t||q - q*||");
+        outWriter.WriteLine(new string('=',75));
         for (int i = 0; i < nodes.Count; ++i)
         {
-            qz = Function.Func(0, nodes[i].R);
-            outWriter.WriteLine("{0:E}", $"{nodes[i].R}\t\t{q[i]}\t\t{qz}\t\t{Math.Abs(q[i] - qz)}");
-        }
+            var qz = Function.Func(NumberFunction, nodes[i].R);
+            outWriter.WriteLine($"{nodes[i].R:E}\t\t{q[i]:E}\t\t{qz:E}\t\t{Math.Abs(q[i] - qz):E}");
+            outWriter.WriteLine(new string('=', 75));
 
-        for (int i = 0; i < nodes.Count; ++i)
-        {
-            sum1 += Math.Pow(q[i] - Function.Func(0, nodes[i].R), 2);
-            sum2 += Math.Pow(Function.Func(0, nodes[i].R), 2);
+            sum1 += Math.Pow(q[i] - Function.Func(NumberFunction, nodes[i].R), 2);
+            sum2 += Math.Pow(Function.Func(NumberFunction, nodes[i].R), 2);
         }
-
-        outWriter.WriteLine("{0:E}", $"Относительная погрешность ||q* - q|| / ||q*|| = {Math.Sqrt(sum1 / sum2)}");
+        outWriter.WriteLine("{0:E}", $"Относительная погрешность ||q* - q|| / ||q*|| = {Math.Sqrt(sum1 / sum2):E15}");
     }
 }

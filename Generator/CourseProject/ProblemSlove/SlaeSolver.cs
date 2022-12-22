@@ -1,12 +1,10 @@
 ﻿using CourseProject.ProblemSlove.GlobalComponent;
-using System.Drawing;
 
 namespace CourseProject.ProblemSlove;
 
 internal class SlaeSolver
 {
     private readonly int _nodesCount;
-    private readonly int _count;
 
     private readonly List<int> _ia;
     private readonly List<double> _al;
@@ -28,28 +26,23 @@ internal class SlaeSolver
 
     public List<double> WeightsTakes() => _q;
 
-    public string Slove()
+    public void Slove()
     {
-        PrintComponentsCholesky();
-
-        var status = CholeskyDecomposition();
-
-        if (status != "OK")
-            return status;
-
-        ForwardReverse();
         // PrintComponentsCholesky();
 
-        return "OK";
+        CholeskyDecomposition();
+        ForwardReverse();
+
+        PrintComponentsCholesky();
     }
 
-    private string CholeskyDecomposition()
+    private void CholeskyDecomposition()
     {
         double totalSum;
 
         _di[0] = Math.Sqrt(_di[0]);                           // l11 = sqrt(a11)
 
-        for (int i = 1; i <= _nodesCount; i++)                 // пробегаем по строкам матрицы
+        for (int i = 1; i < _nodesCount; i++)                 // пробегаем по строкам матрицы
         {
             int a = i - (_ia[i + 1] - _ia[i]);                  // начало i-й строки в абсолютной нумерации
             for (int j = 0; j < _ia[i + 1] - _ia[i]; j++)     // пробегаем по столбцам до диагонали
@@ -73,16 +66,15 @@ internal class SlaeSolver
             _di[i] = Math.Sqrt(totalSum);
 
             // _di[i] = Math.Sqrt(_di[i] - _al.Where(item => item < _ia[i + 1] - _ia[i]).Sum(item => _al[_ia[i] - 1] * _al[_ia[i] - 1]));
-            if (_di[i] == 0) return new string("Decomposition error");
+            if (_di[i] == 0) throw new InvalidOperationException("Decomposition error!"); ;
         }
-        return new string("OK");
     }
 
     private void ForwardReverse()
     {
         _q[0] = _b[0] / _di[0];
 
-        for (int i = 1; i <= _nodesCount; ++i)
+        for (int i = 1; i < _nodesCount; ++i)
         {
             _q[i] = _b[i];
             for (int j = 0; j < _ia[i + 1] - _ia[i]; ++j)
@@ -90,12 +82,12 @@ internal class SlaeSolver
             _q[i] /= _di[i];
         }
 
-        for (int i = 0; i <= _nodesCount; ++i)
+        for (int i = 0; i < _nodesCount; ++i)
             _b[i] = _q[i];
 
-        for (int i = _nodesCount; i >= 0; --i)
+        for (int i = _nodesCount - 1; i >= 0; --i)
         {
-            _q[i] = _b[i] / _di[i]; 
+            _q[i] = _b[i] / _di[i];
             for (int j = 0; j < _ia[i + 1] - _ia[i]; ++j)
                 _b[i - _ia[i + 1] + _ia[i] + j] -= _q[i] * _al[_ia[i] + j - 1];
         }

@@ -13,7 +13,7 @@ internal class GridFactory : IGridFactory
         var elements = _elementReader.Read();
         var nodes = _nodeReader.Read();
 
-        return elements == null || nodes == null // ?
+        return elements == null || nodes == null
             ? throw new InvalidDataException()
             : new Grid(elements, nodes);
     }

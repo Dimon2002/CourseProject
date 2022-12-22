@@ -7,12 +7,12 @@ internal class MatrixPortrait
 {
     public readonly Grid _grid;
 
-    public int ElementsCount { get => _grid.Elements.Count; private set =>  _ = _grid.Elements.Count; }
+    public int ElementsCount { get => _grid.Elements.Count; private set => _ = _grid.Elements.Count; }
     public int NodesCount { get => _grid.Nodes.Count; private set => _ = _grid.Nodes.Count; }
     public double LastNode { get => _grid.Nodes.LastOrDefault().R; set => _ = _grid.Nodes.LastOrDefault().R; }
     public double FirstNode { get => _grid.Nodes.FirstOrDefault().R; set => _ = _grid.Nodes.FirstOrDefault().R; }
 
-    public List<int> ia = new();
+    public List<int> ia;
 
     public MatrixPortrait(IGridFactory gridFactory)
     {
@@ -47,11 +47,19 @@ internal class MatrixPortrait
 
     private void SetIa(in List<List<int>> AdjacencyList)
     {
-        ia.Add(1);
-        
-        for (int i = 0; i < AdjacencyList.Count; ++i)
+        ia = new(new int[NodesCount + 1])
+        {
+            [0] = 1,
+            [1] = 1
+        };
+
+        for (int i = 0; i < NodesCount - 1; i++)
+            ia[i + 2] = ia[i + 1] + 1 + i % 2;
+
+        // ia.Add(1);
+        /*for (int i = 0; i < AdjacencyList.Count; ++i)
             ia.Add(AdjacencyList[i].Count + ia.Last());
-        ia.Add(AdjacencyList[^1].Count + ia.Last() + 1);
+        ia.Add(AdjacencyList[^1].Count + ia.Last() + 1);*/
     }
 
     private static void PrintAdjacencyList(List<List<int>> AdjacencyList)

@@ -4,21 +4,21 @@ using CourseProject.ProblemSlove;
 using CourseProject.ProblemSlove.GlobalComponent;
 using CourseProject.ProblemSlove.Matrix;
 using DataStucters.Grid;
+using Generator.CourseProject.DataStucters.Config;
 
 namespace CourseProject;
 
 internal class Program
 {
-    const double rStart = 1D;
-    const double rEnd = 3D;
-    const double Step = 1D;
-
     static void Main()
     {
+        if (Area.rStart > Area.rEnd || Area.Step == 0)
+            throw new InvalidDataException("Incorrect calculated area!!!");
+
         // Генерация входных файлов
-        NodeGenerator.Generate(rStart, rEnd, Step);
-        ElementGenerator.Generate(rStart, rEnd, Step);
-        BoundaryСonditionsGenerator.Generate(new Conditions(1, false, 1), new Conditions(1, true, 6));
+        NodeGenerator.Generate(Area.rStart, Area.rEnd, Area.Step);
+        ElementGenerator.Generate(Area.rStart, Area.rEnd, Area.Step);
+        BoundaryСonditionsGenerator.Generate(InputConditions.ListConditions[0], InputConditions.ListConditions[1]);
 
         // Считываем сетку и строим портрет
         IGridFactory grid = new GridFactory();
@@ -29,15 +29,14 @@ internal class Program
         globalComponents.CreateGlobalComponents();
 
         // Учитываем краевые условия
-//        AccountingConditions conditions = new(globalComponents);
-//        conditions.ConsiderAccountingConditions();
+        AccountingConditions conditions = new(globalComponents);
+        conditions.ConsiderAccountingConditions();
 
         // Решение Слау
-        SlaeSolver solver = new(globalComponents);
-        if (solver.Slove() != "OK")
-            throw new InvalidDataException("Decomposition error!");
+        SlaeSolver solver = new(conditions._globalComponents);
+        solver.Slove();
 
         // Вывод решения: u(r)
-        // ConclusionSolution.Print(solver.WeightsTakes(), Portrait._grid.Nodes);
+        ConclusionSolution.Print(solver.WeightsTakes(), Portrait._grid.Nodes);
     }
 }

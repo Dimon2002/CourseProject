@@ -7,7 +7,6 @@ internal static class ElementGenerator
         using StreamWriter ElementWriter = new(Config.Config.Root + Config.Config.ElemFile);
 
         var difference = rEnd - rStart;
-
         var CountElements = difference % h == 0
                  ? Truncate(difference / h)
                  : Truncate(difference / h) + 1;
@@ -19,6 +18,6 @@ internal static class ElementGenerator
                                     + i + " " 
                                     + Convert.ToDouble(Config.Materials.Gamma) + " " 
                                     + Convert.ToDouble(Config.Materials.Diffusion) + " " 
-                                    + 0);
+                                    + 1);
     }
 }
