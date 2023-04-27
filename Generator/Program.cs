@@ -3,7 +3,6 @@ using CourseProject.DataStucters.FileGenerator;
 using CourseProject.ProblemSlove;
 using CourseProject.ProblemSlove.GlobalComponent;
 using CourseProject.ProblemSlove.Matrix;
-using DataStucters.Grid;
 using Generator.CourseProject.DataStucters.Config;
 
 namespace CourseProject;
@@ -17,9 +16,9 @@ internal class Program
 
         // Генерация входных файлов
         NodeGenerator.Generate(Area.rStart, Area.rEnd, Area.Step);
-        ElementGenerator.Generate(Area.rStart, Area.rEnd, Area.Step);
+        ElementGenerator.Generate(Area.rStart, Area.rEnd, Area.Step, Area.NumberFunction);
         BoundaryСonditionsGenerator.Generate(InputConditions.ListConditions[0], InputConditions.ListConditions[1]);
-
+         
         // Считываем сетку и строим портрет
         IGridFactory grid = new GridFactory();
         MatrixPortrait Portrait = new(grid);
@@ -35,8 +34,10 @@ internal class Program
         // Решение Слау
         SlaeSolver solver = new(conditions._globalComponents);
         solver.Slove();
-
+         
         // Вывод решения: u(r)
-        ConclusionSolution.Print(solver.WeightsTakes(), Portrait._grid.Nodes);
+        ConclusionSolution.Print(solver.WeightsTakes(), Portrait._grid.Nodes, Area.NumberFunction);
+
+        Console.WriteLine("Completed");
     }
 }

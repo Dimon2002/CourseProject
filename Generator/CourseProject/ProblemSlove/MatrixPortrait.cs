@@ -47,14 +47,23 @@ internal class MatrixPortrait
 
     private void SetIa(in List<List<int>> AdjacencyList)
     {
-        ia = new(new int[NodesCount + 1])
+        ia = new(new int[2 * ElementsCount + 2])
         {
             [0] = 1,
             [1] = 1
         };
 
-        for (int i = 0; i < NodesCount - 1; i++)
-            ia[i + 2] = ia[i + 1] + 1 + i % 2;
+        for (int i = 2; i < ia.Count; i++)
+        {
+            ia[i] = ia[i - 1];
+
+            if (i % 2 == 0)
+            {
+                ia[i] += 1;
+                continue;
+            }
+            ia[i] += 2;
+        }
     }
 
     private static void PrintAdjacencyList(List<List<int>> AdjacencyList)

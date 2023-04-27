@@ -43,8 +43,8 @@ internal class AccountingConditions
     {
         if (SideConditions)
         {
-            _globalComponents.di[_globalComponents._matrixPortrait.NodesCount - 1] = 1e+60;
-            _globalComponents.b[_globalComponents._matrixPortrait.NodesCount - 1] = 1e+60 * value;
+            _globalComponents.di[^1] = 1e+60;
+            _globalComponents.b[^1] = 1e+60 * value;
         }
         else
         {

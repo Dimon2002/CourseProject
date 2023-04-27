@@ -27,12 +27,8 @@ internal class SlaeSolver
 
     public void Slove()
     {
-        // PrintComponentsCholesky();
-
         CholeskyDecomposition();
         ForwardReverse();
-
-        // PrintComponentsCholesky();
     }
 
     private void CholeskyDecomposition()
@@ -41,7 +37,7 @@ internal class SlaeSolver
 
         _di[0] = Math.Sqrt(_di[0]);                           // l11 = sqrt(a11)
 
-        for (int i = 1; i < _nodesCount; i++)                 // пробегаем по строкам матрицы
+        for (int i = 1; i < _q.Count; i++)                 // пробегаем по строкам матрицы
         {
             int a = i - (_ia[i + 1] - _ia[i]);                  // начало i-й строки в абсолютной нумерации
 
@@ -59,14 +55,12 @@ internal class SlaeSolver
                 _al[_ia[i] + j - 1] = totalSum / _di[a + j];
             }
 
-            // Диагональные элементы
-            totalSum = _di[i];
-            for (int k = 0; k < _ia[i + 1] - _ia[i]; k++)
-                totalSum -= _al[_ia[i] + k - 1] * _al[_ia[i] + k - 1];
+            totalSum = _di[i] - Enumerable.Range(_ia[i], _ia[i + 1] - _ia[i]).SelectMany(k => new[] { _al[k - 1] * _al[k - 1] }).Sum();
+
             _di[i] = Math.Sqrt(totalSum);
 
-            // _di[i] = Math.Sqrt(_di[i] - _al.Where(item => item < _ia[i + 1] - _ia[i]).Sum(item => _al[_ia[i] - 1] * _al[_ia[i] - 1]));
-            if (_di[i] == 0) throw new InvalidOperationException("Decomposition error!"); ;
+            if (_di[i] < 1e-14)
+                throw new InvalidOperationException("Decomposition error!");
         }
     }
 
@@ -74,7 +68,7 @@ internal class SlaeSolver
     {
         _q[0] = _b[0] / _di[0];
 
-        for (int i = 1; i < _nodesCount; ++i)
+        for (int i = 1; i < _q.Count; ++i)
         {
             _q[i] = _b[i];
             for (int j = 0; j < _ia[i + 1] - _ia[i]; ++j)
@@ -82,10 +76,10 @@ internal class SlaeSolver
             _q[i] /= _di[i];
         }
 
-        for (int i = 0; i < _nodesCount; ++i)
+        for (int i = 0; i < _q.Count; ++i)
             _b[i] = _q[i];
 
-        for (int i = _nodesCount - 1; i >= 0; --i)
+        for (int i = _q.Count - 1; i >= 0; --i)
         {
             _q[i] = _b[i] / _di[i];
             for (int j = 0; j < _ia[i + 1] - _ia[i]; ++j)

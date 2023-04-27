@@ -2,7 +2,7 @@
 using static Math;
 internal static class ElementGenerator
 {
-    internal static void Generate(double rStart, double rEnd, double h)
+    internal static void Generate(double rStart, double rEnd, double h, int NumberFucntion = 0)
     {
         using StreamWriter ElementWriter = new(Config.Config.Root + Config.Config.ElemFile);
 
@@ -18,6 +18,6 @@ internal static class ElementGenerator
                                     + i + " " 
                                     + Convert.ToDouble(Config.Materials.Gamma) + " " 
                                     + Convert.ToDouble(Config.Materials.Diffusion) + " " 
-                                    + 1);
+                                    + NumberFucntion);
     }
 }

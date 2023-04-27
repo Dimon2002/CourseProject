@@ -17,15 +17,15 @@ internal class GlobalComponents
         _matrixPortrait = matrixPortrait;
         ia = matrixPortrait.ia;
 
+        al = new(new double[3 * _matrixPortrait.ElementsCount]);
         di = new(new double[2 * _matrixPortrait.ElementsCount + 1]);
-        al = new(new double[3 * matrixPortrait.ElementsCount]);
         b = new(new double[2 * _matrixPortrait.ElementsCount + 1]);
         _countElements = matrixPortrait.ElementsCount;
     }
 
     public void CreateGlobalComponents()
     {
-        for (int i = 0; i < _countElements - 1; i++)
+        for (int i = 0; i < _countElements; i++)
         {
             var DiffusionOnElement = _matrixPortrait.Diffusion(i);
             var GammaOnElement = _matrixPortrait.Gamma(i);
