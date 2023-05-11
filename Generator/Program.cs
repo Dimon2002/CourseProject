@@ -1,9 +1,12 @@
 ﻿using CourseProject.DataStucters;
+using CourseProject.DataStucters.Config;
 using CourseProject.DataStucters.FileGenerator;
 using CourseProject.ProblemSlove;
 using CourseProject.ProblemSlove.GlobalComponent;
 using CourseProject.ProblemSlove.Matrix;
 using Generator.CourseProject.DataStucters.Config;
+using Generator.CourseProject.ProblemSlove;
+using Generator.CourseProject.ReaderData;
 
 namespace CourseProject;
 
@@ -11,6 +14,13 @@ internal class Program
 {
     static void Main()
     {
+        File.Delete(Config.Root + Config.Out);
+
+        var timeGrid = TimeGridReader.Read();
+
+        if (timeGrid.Count < 3)
+            throw new InvalidDataException("Incorrect time grid!!!");
+
         if (Area.rStart > Area.rEnd || Area.Step == 0)
             throw new InvalidDataException("Incorrect calculated area!!!");
 
@@ -23,20 +33,12 @@ internal class Program
         IGridFactory grid = new GridFactory();
         MatrixPortrait Portrait = new(grid);
 
-        // Собираем глобальные элементы СЛАУ
+        // Создаем экземляры классов
         GlobalComponents globalComponents = new(Portrait);
-        globalComponents.CreateGlobalComponents();
-
-        // Учитываем краевые условия
         AccountingConditions conditions = new(globalComponents);
-        conditions.ConsiderAccountingConditions();
 
-        // Решение Слау
-        SlaeSolver solver = new(conditions._globalComponents);
-        solver.Slove();
-         
-        // Вывод решения: u(r)
-        ConclusionSolution.Print(solver.WeightsTakes(), Portrait._grid.Nodes, Area.NumberFunction);
+        ImplicitScheme myScheme = new(globalComponents, conditions, timeGrid);
+        myScheme.Compute();
 
         Console.WriteLine("Completed");
     }

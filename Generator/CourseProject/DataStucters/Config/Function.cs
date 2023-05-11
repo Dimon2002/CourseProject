@@ -1,22 +1,25 @@
 ﻿namespace CourseProject.DataStucters.Config;
 
-internal static class Function
+internal static class AnalyticalFunction
 {
-    internal static double Func(in int NumberFunction, in double R) => NumberFunction switch
+    internal static double Compute(in int NumberFunction, in double R, in double t) => NumberFunction switch
     {
-        0 => -4,
-        1 => 5,
-        2 => 1 / R + R,
-        3 => R,
-        _ => 0,
+        0 => t,
+        1 => Math.Pow(R, 2) * Math.Pow(t, 2),
+        2 => Math.Pow(t, 3),
+        3 => Math.Cos(R) * t,
+        _ => throw new InvalidDataException("Отсутствует функия для вычисления!"),
     };
+}
 
-    internal static double AnalyticalFunc(in int NumberFunction, in double R) => NumberFunction switch
+internal static class NumericalFunction
+{
+    internal static double Compute(in int NumberFunction, in double R, in double t) => NumberFunction switch
     {
-        0 => R * R,
-        1 => 5,
-        2 => R,
-        3 => R,
-        _ => 0,
+        0 => 2,
+        1 => 2 * Math.Pow(R, 2) * t,
+        2 => 3 * Math.Pow(t, 2),
+        3 => Math.Cos(R) + (Math.Sin(R) * t / R) + t * Math.Cos(R),
+        _ => throw new InvalidDataException("Отсутствует функия для вычисления!"),
     };
 }

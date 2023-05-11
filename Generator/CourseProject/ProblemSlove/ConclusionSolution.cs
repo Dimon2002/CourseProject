@@ -5,7 +5,7 @@ namespace CourseProject.ProblemSlove;
 
 internal static class ConclusionSolution
 {
-    internal static List<Node> AddInternalPoints(List<Node> oldNodes)
+    private static List<Node> AddInternalPoints(List<Node> oldNodes)
     {
         List<Node> newNodes = new();
         Node ri = new(oldNodes[0].R);
@@ -21,13 +21,23 @@ internal static class ConclusionSolution
 
         return newNodes;
     }
-    internal static void Print(List<double> q, List<Node> nodes, int NumberFunction = 0)
+    internal static void Print(List<double> q, List<Node> nodes, double t, int NumberFunction = 0)
     {
         double sum1 = 0, sum2 = 0;
 
         var newNodes = AddInternalPoints(nodes);
         
-        using StreamWriter outWriter = new(Config.Root + Config.Out);
+        using StreamWriter outWriter = new(Config.Root + Config.Out, true);
+
+        Console.WriteLine(new string('=', 75));
+        outWriter.WriteLine(new string('=', 75));
+
+        Console.ForegroundColor = ConsoleColor.Magenta;
+
+        Console.WriteLine($"Временной узел {t:F5}");
+        outWriter.WriteLine($"Временной узел {t:F5}");
+        
+        Console.ForegroundColor = ConsoleColor.White;
 
         Console.WriteLine("r (узлы)\tq = u(r)\t\tq*\t\t\t||q - q*||");
         Console.WriteLine(new string('=', 75));
@@ -40,7 +50,7 @@ internal static class ConclusionSolution
             if (i % 2 == 0)  
                 Console.ForegroundColor = ConsoleColor.Green;
 
-            var qz = Function.AnalyticalFunc(NumberFunction, newNodes[i].R);
+            var qz = AnalyticalFunction.Compute(NumberFunction, newNodes[i].R, t);
 
             Console.WriteLine($"" +
                 $"{newNodes[i].R:F5}\t\t" +
@@ -59,8 +69,8 @@ internal static class ConclusionSolution
 
             outWriter.WriteLine(new string('=', 75));
 
-            sum1 += Math.Pow(q[i] - Function.AnalyticalFunc(NumberFunction, newNodes[i].R), 2);
-            sum2 += Math.Pow(Function.AnalyticalFunc(NumberFunction, newNodes[i].R), 2);
+            sum1 += Math.Pow(q[i] - AnalyticalFunction.Compute(NumberFunction, newNodes[i].R, t), 2);
+            sum2 += Math.Pow(AnalyticalFunction.Compute(NumberFunction, newNodes[i].R, t), 2);
         }
 
         Console.WriteLine($"Относительная погрешность ||q* - q|| / ||q*|| = {Math.Sqrt(sum1 / sum2):E15}");

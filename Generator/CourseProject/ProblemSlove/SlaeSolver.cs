@@ -4,8 +4,6 @@ namespace CourseProject.ProblemSlove;
 
 internal class SlaeSolver
 {
-    private readonly int _nodesCount;
-
     private readonly List<int> _ia;
     private readonly List<double> _al;
     private readonly List<double> _di;
@@ -20,7 +18,6 @@ internal class SlaeSolver
         _b = globalComponent.b;
 
         _q = new(new double[_b.Count]);
-        _nodesCount = globalComponent._matrixPortrait.NodesCount;
     }
 
     public List<double> WeightsTakes() => _q;
