@@ -6,5 +6,5 @@ internal static class Area
     internal const double rEnd = 5D;
     internal const double Step = 1D;
 
-    internal const int NumberFunction = 2;
+    internal const int NumberFunction = 0;
 }
